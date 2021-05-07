@@ -49,7 +49,6 @@
             >
               <template slot="title">
                 <i class="el-icon-s-order"></i>
-
                 <span>{{ Subitem.authName }}</span>
               </template>
             </el-menu-item>

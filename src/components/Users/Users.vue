@@ -5,9 +5,9 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
 
-      <el-breadcrumb-item><a href="/home">用户管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/users' }">用户管理</el-breadcrumb-item>
 
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/roles' }">用户列表</el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 卡片 -->
@@ -15,7 +15,7 @@
     <el-card>
       <!-- 搜索与添加 -->
 
-      <el-row :gutter="20">
+      <el-row :gutter="30">
         <el-col :span="12">
           <el-input
             placeholder="请输入内容"
@@ -33,7 +33,7 @@
           </el-input>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="5">
           <el-button type="primary" @click="dialogVisible = true">
             添加信息</el-button
           >
@@ -113,6 +113,7 @@
                 icon="el-icon-setting"
                 circle
                 size="mini"
+                @click="SetRight(scope.row)"
               ></el-button>
             </el-tooltips>
           </template>
@@ -172,7 +173,7 @@
         :rules="EditFormRules"
         :model="EditForm"
         ref="EditFormRef"
-        label-width="70px"
+        label-width="100px"
       >
         <el-form-item label="用户名">
           <el-input v-model="EditForm.username" disabled></el-input>
@@ -190,6 +191,42 @@
       </span>
     </el-dialog>
     <!-- 删除用户 -->
+    <el-dialog title="分配角色" :visible.sync="RightVisible" width="50%">
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 分配角色 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="RightVisible"
+      width="50%"
+      @close="setRolesClose()"
+    >
+      <div>
+        <p>当前用户:{{ userInfo.username }}</p>
+        <p>当前角色:{{ userInfo.authname }}</p>
+        <p>
+          分配新角色:
+          <el-select v-model="SetRolesRight" placeholder="请选择">
+            <el-option
+              v-for="item in AllRolesRight"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="RightVisible = false">取 消</el-button>
+        <el-button type="primary" @click="SaveRoles()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -212,7 +249,7 @@ export default {
       cb(new Error('此手机号错误'))
     }
     return {
-      // 获取用户列表
+      // 获取用户列表 页数 显示多少条数据
       queryInfo: {
         query: '',
         // 当前页数
@@ -220,11 +257,13 @@ export default {
         // 每页显示多少条数据
         pagesize: 1
       },
+      // 获取用户数据
       UserList: [],
       // 多少条数据
       total: 10,
       dialogVisible: false,
       EditVisible: false,
+      RightVisible: false,
       Userrules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -266,12 +305,7 @@ export default {
         ]
       },
       // 新增用户
-      loginform: {
-        username: '',
-        password: '',
-        email: '',
-        model: ''
-      },
+      loginform: {},
       // 查询用户
       EditForm: {},
       EditFormRules: {
@@ -291,7 +325,13 @@ export default {
           },
           { validator: checkModel, trigger: 'blur' }
         ]
-      }
+      },
+      // 获取角色数据
+      userInfo: {},
+      // 所有角色数据列表
+      AllRolesRight: [],
+      // 已选中的角色ID值
+      SetRolesRight: ''
     }
   },
   // 页面组件挂载前加载
@@ -322,6 +362,7 @@ export default {
         `users/${userinfo.id}/state/${userinfo.mg_state}`
       )
       if (res.status !== 200) {
+        // 点击后取反 不能与后端数据的冲突
         userinfo.mg_state = !userinfo.ma_state
         return this.$massage.error('修改失败')
       }
@@ -337,6 +378,7 @@ export default {
     },
     // 点击按扭添加新用户
     addUser() {
+      // 预检验表单是否合法
       this.$refs.FormRef.validate(async valid => {
         if (!valid) return false
         const { data: res } = await this.$http.post('users', this.loginform)
@@ -346,13 +388,14 @@ export default {
         this.dialogVisible = false
       })
     },
-    // 展示修改用户的对话框
+    // 展示修改用户的对话框 把对应的数据打印上去显示
     async showEditDialog(id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) {
         return this.$massage.error('用户信息获取失败')
       }
       this.EditForm = res.data
+      // 打开对话框
       this.EditVisible = true
     },
     // 修改用户信息并提交
@@ -376,7 +419,7 @@ export default {
     // 根据ID删除用户信息
     async RemoveUser(id) {
       const confirmRef = this.$confirm(
-        '此操作将永久删除该用户, 是否继续?',
+        '此操作将永久删 除该用户, 是否继续?',
         '提示',
         {
           confirmButtonText: '确定',
@@ -389,6 +432,29 @@ export default {
       if (res.meta.status !== 200) return this.$massage.error('删除失败')
       this.getUserList()
       this.$$massage.success('删除成功')
+    },
+    // 显示分配对话框
+    async SetRight(node) {
+      this.userInfo = node.info
+      // 展示当此对话框前显示所有角色列表
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.message.error('获取列表失败')
+      this.AllRolesRight = res.data
+      this.RightVisible = true
+    },
+    // 确定分配角色
+    async SaveRoles() {
+      if (!this.SetRolesRight) return this.$massage.error('请选择要分配的角色')
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}`, {
+        rid: this.SetRolesRight
+      })
+      if (res.meta.status !== 200) return this.$massage.error('分配角色失败')
+      this.$$massage.success('更新角色成功')
+      this.getUserList()
+      this.RightVisible = false
+    },
+    setRolesClose() {
+      this.SetRolesRight = ''
     }
   }
 }
