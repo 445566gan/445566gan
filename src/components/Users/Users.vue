@@ -62,7 +62,7 @@
               @change="usertateChange(scope.row)"
             ></el-switch>
           </template>
-          <!--  -->
+          <!-- 三按钮 -->
         </el-table-column>
         <el-table-column label="操作" width="200px">
           <template slot-scope="scope">
@@ -191,14 +191,7 @@
       </span>
     </el-dialog>
     <!-- 删除用户 -->
-    <el-dialog title="分配角色" :visible.sync="RightVisible" width="50%">
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog>
+
     <!-- 分配角色 -->
     <el-dialog
       title="分配角色"
@@ -435,6 +428,7 @@ export default {
     },
     // 显示分配对话框
     async SetRight(node) {
+      // 获取用户数据
       this.userInfo = node.info
       // 展示当此对话框前显示所有角色列表
       const { data: res } = await this.$http.get('roles')
@@ -455,6 +449,7 @@ export default {
     },
     setRolesClose() {
       this.SetRolesRight = ''
+      this.userInfo = {}
     }
   }
 }

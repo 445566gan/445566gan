@@ -2,10 +2,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import Zktable from 'vue-table-with-tree-grid'
 import './plugins/element.js'
 import './assets/css/base.css'
 import axios from 'axios'
-// 配置请求根路径
+Vue.component('tree-table', Zktable)
+    // 配置请求根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1'
     // axios拦截器 在接收到数据后做的默认预处理 完成后接要返回
 axios.interceptors.request.use(config => {

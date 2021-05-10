@@ -39,7 +39,6 @@
                 <el-tag closable @close="removeRightByID(scope.row, item.id)">{{
                   item.authname
                 }}</el-tag>
-
                 <i class="el-icon-caret-right"></i>
               </el-col>
 
@@ -195,7 +194,10 @@ export default {
     return {
       RoulesList: [],
       // 新增数据渲染
-      loginList: {},
+      loginList: {
+        roleName: '',
+        roleDesc: ''
+      },
       // 显示权限数据
       rightsList: [],
       treeProps: {
@@ -206,7 +208,7 @@ export default {
       },
       dekeys: [],
       // 保存当前ID值
-      RolesId: '',
+      RolesID: '',
       loginRules: {
         roleName: [
           { required: true, message: '请输入角色名', trigger: 'blur' },
@@ -331,7 +333,7 @@ export default {
     },
     // 角色权限显示
     async ShowSettingRight(role) {
-      this.RolesId = role.id
+      this.RolesID = role.id
       const { data: res } = await this.$http.get('right/tree')
       if (res.meta.status !== 200) {
         this.$message.error('权限获取失败')
