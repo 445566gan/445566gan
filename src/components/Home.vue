@@ -1,67 +1,69 @@
 <template>
-  <el-container class="home-container">
-    <!-- 头部区域 -->
+  <div class="heardAll">
+    <el-container class="home-container">
+      <!-- 头部区域 -->
 
-    <el-header>
-      <div class="tit"><span>11223344</span></div>
+      <el-header>
+        <div class="tit"><span>11223344</span></div>
 
-      <el-button type="info" @click="unameOut">退出</el-button>
-    </el-header>
+        <el-button type="info" @click="unameOut">退出</el-button>
+      </el-header>
 
-    <!-- 页面主体区域 -->
+      <!-- 页面主体区域 -->
 
-    <el-container>
-      <!-- 侧边栏 -->
+      <el-container>
+        <!-- 侧边栏 -->
 
-      <el-aside :width="isToogle ? '64px' : '200px'">
-        <div class="toogle-button" @click="toogle_menu">|||</div>
+        <el-aside :width="isToogle ? '64px' : '200px'">
+          <div class="toogle-button" @click="toogle_menu">|||</div>
 
-        <!-- 菜单 -->
+          <!-- 菜单 -->
 
-        <el-menu
-          background-color="#333744"
-          text-color="#FFF"
-          active-text-color="#ffd04b"
-          :unique-opened="true"
-          :collapse="isToogle"
-          :collapse-transition="false"
-          :default-active="actPath"
-          router
-        >
-          <!-- 一级 -->
-
-          <el-submenu
-            :index="item.id + ''"
-            v-for="item in MenuList"
-            :key="item.id"
+          <el-menu
+            background-color="#333744"
+            text-color="#FFF"
+            active-text-color="#ffd04b"
+            :unique-opened="true"
+            :collapse="isToogle"
+            :collapse-transition="false"
+            :default-active="actPath"
+            router
           >
-            <template slot="title">
-              <i class="el-icon-location"></i>
+            <!-- 一级 -->
 
-              <span>{{ item.authName }}</span>
-            </template>
-            <!-- 二级 -->
-            <el-menu-item
-              :index="'/' + Subitem.path"
-              v-for="Subitem in item.children"
-              :key="Subitem.id"
-              @click="ChangePath('/' + Subitem.path)"
+            <el-submenu
+              :index="item.id + ''"
+              v-for="item in MenuList"
+              :key="item.id"
             >
               <template slot="title">
-                <i class="el-icon-s-order"></i>
-                <span>{{ Subitem.authName }}</span>
+                <i class="el-icon-location"></i>
+
+                <span>{{ item.authName }}</span>
               </template>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-        <!-- 菜单 -->
-      </el-aside>
-      <!-- 右侧内容区 -->
-      <el-main>
-        <router-view></router-view>
-      </el-main>
+              <!-- 二级 -->
+              <el-menu-item
+                :index="'/' + Subitem.path"
+                v-for="Subitem in item.children"
+                :key="Subitem.id"
+                @click="ChangePath('/' + Subitem.path)"
+              >
+                <template slot="title">
+                  <i class="el-icon-s-order"></i>
+                  <span>{{ Subitem.authName }}</span>
+                </template>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+          <!-- 菜单 -->
+        </el-aside>
+        <!-- 右侧内容区 -->
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+  </div>
 </template>
 <script>
 export default {
@@ -100,6 +102,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.heardAll {
+  width: 100%;
+  height: 100%;
+}
 .toogle-button {
   background-color: #4a5064;
   font-size: 10px;

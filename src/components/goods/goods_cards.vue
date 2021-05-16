@@ -95,11 +95,9 @@
           <el-cascader
             v-model="selectedKeys"
             :options="parentCateList"
-            expand-trigger="hover"
             :props="parentWord"
             @change="parentChange()"
             clearable
-            size="medium"
           ></el-cascader>
         </el-form-item>
       </el-form>
@@ -142,7 +140,8 @@ export default {
       parentWord: {
         value: 'cat_id',
         label: 'cat_name',
-        children: 'children'
+        children: 'children',
+        expandTrigger: 'hover'
       },
       // 父级选择的ID值
       selectedKeys: [],
@@ -219,11 +218,10 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
-      console.log(id)
       if (confim !== 'confirm') {
         this.$massage.info('已取消删除')
       }
-      this.$http.delete()
+      this.$http.delete(id)
     },
     // pageSize改变时
     handleSizeChange(newSize) {
