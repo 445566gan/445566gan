@@ -185,7 +185,7 @@ export default {
       const { data: res } = await this.$http.get('categories', {
         params: this.querInfo
       })
-      if (res.meta.status !== 200) this.massage.error('商品数据获取失败')
+      if (res.meta.status !== 200) this.message.error('商品数据获取失败')
       this.GoodsList = res.data.result
       this.total = res.data.total
     },
@@ -198,7 +198,7 @@ export default {
       const { data: res } = await this.$http.get('categories', {
         params: { type: 2 }
       })
-      if (res.meta.status !== 200) return this.massage.error('获取父类等级失败')
+      if (res.meta.status !== 200) return this.message.error('获取父类等级失败')
       this.parentCateList = res.data
     },
     Addclose() {
@@ -219,7 +219,7 @@ export default {
         cancelButtonText: '取消'
       })
       if (confim !== 'confirm') {
-        this.$massage.info('已取消删除')
+        this.$message.info('已取消删除')
       }
       this.$http.delete(id)
     },
@@ -257,9 +257,9 @@ export default {
           this.AddoodsList
         )
         if (res.meta.status !== 201) {
-          return this.$massage.error('添加商品失败')
+          return this.$message.error('添加商品失败')
         }
-        this.$massage.success('添加商品成功')
+        this.$message.success('添加商品成功')
         this.getGoods()
         this.OnAddGoods = false
       })

@@ -8,6 +8,8 @@ import Rights from '../components/Rights/Rights.vue'
 import Roles from '../components/Rights/Roles.vue'
 import Goods from '../components/goods/goods_cards.vue'
 import Params from '../components/goods/Params.vue'
+import GoodsList from '../components/goods/goods_list.vue'
+import AddGoods from '../components/goods/Add.vue'
 Vue.use(VueRouter)
 const routes = [
     { path: '/', redirect: '/login' },
@@ -22,7 +24,9 @@ const routes = [
             { path: '/rights', component: Rights },
             { path: '/roles', component: Roles },
             { path: '/goods', component: Goods },
-            { path: '/params', component: Params }
+            { path: '/params', component: Params },
+            { path: '/goodslist', component: GoodsList },
+            { path: '/goods/add', component: AddGoods }
         ]
     }
 ]

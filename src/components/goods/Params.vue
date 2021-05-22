@@ -3,9 +3,7 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
 
-      <el-breadcrumb-item :to="{ path: '/rights' }"
-        >商品管理</el-breadcrumb-item
-      >
+      <el-breadcrumb-item :to="{ path: '/rights' }">商品管理</el-breadcrumb-item>
 
       <el-breadcrumb-item>参数列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -27,8 +25,7 @@
         <el-col>
           <span>请选择要查询的分类:</span>
 
-          <el-cascader
-            v-model="goodsIDkeys"
+          <el-cascader v-model="goodsIDkeys"
             :options="goodsList"
             :props="goodsProps"
             @change="goodsID"
@@ -226,7 +223,7 @@ export default {
       const { data: res } = await this.$http.get('categories', {
         params: { type: 2 }
       })
-    if (res.meta.status !== 200) { return this.$http.massage.error('获取数据失败') }
+    if (res.meta.status !== 200) { return this.$http.message.error('获取数据失败') }
       this.goodsList = res.data
     },
     // 选择值发生变化时
@@ -252,7 +249,7 @@ export default {
       const { data: res } = await this.$http.get(`categories/${this.cateID}`, {
         parmas: { sel: this.activeName }
       })
-      if (res.meta.status !== 200) return this.$massage.error('获取数据失败')
+      if (res.meta.status !== 200) return this.$message.error('获取数据失败')
       res.data.forEach(item => {
        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
        item.inputVisible = false
@@ -284,9 +281,9 @@ export default {
           }
         )
         if (res.meta.status !== 201) {
-          return this.massage.error('添加失败')
+          return this.message.error('添加失败')
         }
-        this.massage.success('添加成功')
+        this.message.success('添加成功')
         this.AddParams = false
         this.getParamsData()
       })
@@ -298,7 +295,7 @@ export default {
       } = await this.$http.get(`categories/${this.cateID}/${id}`, {
         params: { attr_sel: this.activeName }
       })
-      if (res.meta.status !== 201) return this.$massage.error('获取数据失败')
+      if (res.meta.status !== 201) return this.$message.error('获取数据失败')
       this.EditForm = res.data
       this.ShowEditParams = true
     },
@@ -312,7 +309,7 @@ export default {
           attr_sel: this.activeName
           }
         )
-        if (res.meta.status !== 200) { return this.$massage.erro('修改失败') }
+        if (res.meta.status !== 200) { return this.$message.erro('修改失败') }
         this.getParamsData()
         this.ShowEditParams = false
       })
@@ -329,11 +326,11 @@ export default {
         }
       )
       if (confirmRef !== 'confirm'){
-        this.$massage.info('已取消删除')
+        this.$message.info('已取消删除')
       } else {
         const { data: res } = await this.$http.delete(`categories/${this.cateID}/${id}`)
-        if (res.meta.status !== 200) { return this.$massage.error('删除失败') }
-        this.$massage.success('删除成功')
+        if (res.meta.status !== 200) { return this.$message.error('删除失败') }
+        this.$message.success('删除成功')
         this.getParamsData()
       }
     },
@@ -359,8 +356,8 @@ export default {
     // 后台数据需要字符串形式返回
     attr_vals: row.attr_vals.join(' ')
   })
-      if (res.meta.status !== 200) return this.$massage.error('提交失败')
-      this.$massage.success('提交成功')
+      if (res.meta.status !== 200) return this.$message.error('提交失败')
+      this.$message.success('提交成功')
     },
     // 关闭标签
     closeTabs(index, row){

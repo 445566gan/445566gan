@@ -337,7 +337,7 @@ export default {
       const { data: res } = await this.$http.get('users', {
         params: this.queryInfo
       })
-      if (res.meta.status !== 200) return this.$massage.error('获取失败')
+      if (res.meta.status !== 200) return this.$message.error('获取失败')
       this.UserList = res.data.users
       this.total = res.data.total
     },
@@ -357,9 +357,9 @@ export default {
       if (res.status !== 200) {
         // 点击后取反 不能与后端数据的冲突
         userinfo.mg_state = !userinfo.ma_state
-        return this.$massage.error('修改失败')
+        return this.$message.error('修改失败')
       }
-      this.$massage.success('更新用户信息成功')
+      this.$message.success('更新用户信息成功')
     },
     // 监听添加用户对话框关闭
     Close() {
@@ -375,8 +375,8 @@ export default {
       this.$refs.FormRef.validate(async valid => {
         if (!valid) return false
         const { data: res } = await this.$http.post('users', this.loginform)
-        if (res.meta.status !== 201) return this.$massage.error('添加用户失败!')
-        this.$massage.success('添加用户成功!')
+        if (res.meta.status !== 201) return this.$message.error('添加用户失败!')
+        this.$message.success('添加用户成功!')
         this.getUserList()
         this.dialogVisible = false
       })
@@ -385,7 +385,7 @@ export default {
     async showEditDialog(id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) {
-        return this.$massage.error('用户信息获取失败')
+        return this.$message.error('用户信息获取失败')
       }
       this.EditForm = res.data
       // 打开对话框
@@ -400,13 +400,13 @@ export default {
           email: this.EditForm.email,
           model: this.EditForm.model
         })
-        if (res.meta.status !== 200) return this.$massage.error('更新提交失败')
+        if (res.meta.status !== 200) return this.$message.error('更新提交失败')
         // 关闭对话框
         this.EditVisible = false
         // 刷新列表
         this.getUserList()
         // 提示成功
-        this.$massage.success('修改成功')
+        this.$message.success('修改成功')
       })
     },
     // 根据ID删除用户信息
@@ -420,11 +420,11 @@ export default {
           type: 'warning'
         }
       )
-      if (confirmRef !== confirm) return this.$massage.info('已取消删除')
+      if (confirmRef !== confirm) return this.$message.info('已取消删除')
       const { data: res } = await this.$http.delete('user' + id)
-      if (res.meta.status !== 200) return this.$massage.error('删除失败')
+      if (res.meta.status !== 200) return this.$message.error('删除失败')
       this.getUserList()
-      this.$$massage.success('删除成功')
+      this.$$message.success('删除成功')
     },
     // 显示分配对话框
     async SetRight(node) {
@@ -438,12 +438,12 @@ export default {
     },
     // 确定分配角色
     async SaveRoles() {
-      if (!this.SetRolesRight) return this.$massage.error('请选择要分配的角色')
+      if (!this.SetRolesRight) return this.$message.error('请选择要分配的角色')
       const { data: res } = await this.$http.put(`users/${this.userInfo.id}`, {
         rid: this.SetRolesRight
       })
-      if (res.meta.status !== 200) return this.$massage.error('分配角色失败')
-      this.$$massage.success('更新角色成功')
+      if (res.meta.status !== 200) return this.$message.error('分配角色失败')
+      this.$$message.success('更新角色成功')
       this.getUserList()
       this.RightVisible = false
     },

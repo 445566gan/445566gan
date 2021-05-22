@@ -21,3 +21,7 @@ body,
     margin-top: 20px;
     font-size: 12px;
 }
+
+.ql-editor {
+    min-height: 500px;
+}
