@@ -18,7 +18,7 @@
       >
       </el-alert>
       <!-- 步骤 -->
-      <el-steps :active="activeIndex - 0" finish-status="finish" align-center>
+      <el-steps :active="activeIndex - 0" align-center>
         <el-step title="基本信息"></el-step>
         <el-step title="商品参数"></el-step>
         <el-step title="商品属性"></el-step>
@@ -69,8 +69,8 @@
             >
               <el-checkbox-group v-model="item.attr_vals">
                 <el-checkbox
-                  size="mini"
                   border
+                  size="medium"
                   :label="cb"
                   v-for="(cb, i) in item.attr_vals"
                   :key="i"
@@ -159,6 +159,7 @@ export default {
         goods_price: 0,
         goods_number: 0,
         godds_weight: 0,
+        // 级联Id数组总和
         goods_cat: [],
         // 图片暂存地址数组
         pics: [],
@@ -175,7 +176,7 @@ export default {
           children: [
             {
               goods_id: 157,
-              goods_name: '台标',
+              goods_name: 'ⅰ',
               children: [{ goods_id: 888, goods_name: '氏大' }]
             }
           ]
@@ -211,21 +212,7 @@ export default {
         {
           attr_name: '双工',
           attr_id: 555,
-          attr_vals: [
-            '花草树木',
-            '钦',
-            '钦',
-            '碕',
-            '蓐',
-            '花草树木',
-            '钦',
-            '钦',
-            '碕',
-            '蓐',
-            '花草树木',
-            '钦',
-            '钦'
-          ]
+          attr_vals: ['花草树木', '钦', '钦', '碕', '蓐']
         }
       ],
       onlyTableData: [
@@ -236,23 +223,28 @@ export default {
         },
         {
           attr_name: '手机',
-          attr_id: 44
+          attr_id: 44,
+          attr_vals: '技嘉'
         },
         {
           attr_name: '性能',
-          attr_id: 21
+          attr_id: 21,
+          attr_vals: '技嘉'
         },
         {
           attr_name: '电话',
-          attr_id: 435
+          attr_id: 435,
+          attr_vals: '技嘉'
         },
         {
           attr_name: '移动',
-          attr_id: 234
+          attr_id: 234,
+          attr_vals: '技嘉'
         },
         {
           attr_name: '冷冻库',
-          attr_id: 441
+          attr_id: 441,
+          attr_vals: '技嘉'
         }
       ],
       // 图片上传请求头
@@ -273,6 +265,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error('获取数据失败')
       this.addFormOptions = res.data
     },
+    // 级联发生变化时
     handleChange() {
       if (this.addForm.goods_cat.length !== 3) {
         this.addForm.goods_cat = []
@@ -286,11 +279,6 @@ export default {
         this.$message.error('请选择商品分类')
         return false
       }
-    },
-    // 商品参数标签
-    // 删除标签
-    TagRemove() {
-      console.log(this)
     },
     // 标签读取
     async TabClick() {
@@ -321,7 +309,7 @@ export default {
       }
     },
     // 图片上传
-
+    // file为图片数据信息
     // 点击上传图片的效果
     handlePreview(file) {
       this.imgURL = file.data.response.url
@@ -329,7 +317,7 @@ export default {
     },
     // 处理图片删除的效果
     handleRemove(file) {
-      // file点击的文件数据
+      // file点击的当前文件数据
       const picPath = file.response.data.tmp_path
       // findIndex 查找数组中对应的值
       const picFind = this.addForm.pics.findIndex(item => item.pic === picPath)
@@ -368,6 +356,7 @@ export default {
           const NewInfo = { attr_id: item.attr_id, attr_vals: item.attr_vals }
           this.addForm.attrs.push(NewInfo)
         })
+        // 深拷贝
         const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
         console.log(form)
